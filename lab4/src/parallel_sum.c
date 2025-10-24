@@ -21,7 +21,6 @@ int main(int argc, char **argv)
   uint32_t array_size = 0;
   uint32_t seed = 0;
 
-  // Парсинг аргументов командной строки
   while (true)
   {
     int current_optind = optind ? optind : 1;
@@ -95,7 +94,6 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  // Генерация массива
   int *array = malloc(sizeof(int) * array_size);
   if (array == NULL)
   {
@@ -104,11 +102,10 @@ int main(int argc, char **argv)
   }
   GenerateArray(array, array_size, seed);
 
-  // Начало замера времени
   struct timeval start_time;
   gettimeofday(&start_time, NULL);
 
-  // Инициализация потоков и аргументов
+  // Инициализация потоков
   pthread_t threads[threads_num];
   struct SumArgs args[threads_num];
   int chunk_size = array_size / threads_num;
@@ -127,7 +124,6 @@ int main(int argc, char **argv)
     }
   }
 
-  // Сбор результатов
   int total_sum = 0;
   for (uint32_t i = 0; i < threads_num; i++)
   {
@@ -136,15 +132,12 @@ int main(int argc, char **argv)
     total_sum += (int)(size_t)sum;
   }
 
-  // Конец замера времени
   struct timeval finish_time;
   gettimeofday(&finish_time, NULL);
 
-  // Вычисление времени выполнения
   double elapsed_time = (finish_time.tv_sec - start_time.tv_sec) * 1000.0;
   elapsed_time += (finish_time.tv_usec - start_time.tv_usec) / 1000.0;
 
-  // Освобождение памяти и вывод результатов
   free(array);
   printf("Итого: %d\n", total_sum);
   printf("Время выполнения: %f мс\n", elapsed_time);
